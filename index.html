@@ -25,8 +25,8 @@
                 purple: '#7C3AED',
                 cyan: '#06B6D4',
               },
-              background: '#FFFFFF',
-              surface: '#F8FAFC', // Slate 50
+              background: '#F8FAFC', // Light Gray (Slate 50)
+              surface: '#FFFFFF', // White
               surfaceHighlight: '#F1F5F9', // Slate 100
               border: '#E2E8F0', // Slate 200
               text: {
@@ -39,6 +39,7 @@
               'float': 'float 6s ease-in-out infinite',
               'float-delayed': 'float 6s ease-in-out 3s infinite',
               'spin-slow': 'spin 12s linear infinite',
+              'pulse-soft': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
             },
             keyframes: {
               float: {
@@ -52,7 +53,7 @@
     </script>
     <style>
       body {
-        background-color: #FFFFFF;
+        background-color: #F8FAFC;
         color: #0F172A;
         font-family: 'Inter', sans-serif;
         -webkit-font-smoothing: antialiased;
@@ -77,7 +78,7 @@
       }
 
       .glass {
-        background: rgba(255, 255, 255, 0.7);
+        background: rgba(255, 255, 255, 0.85);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
         border: 1px solid rgba(226, 232, 240, 0.6);

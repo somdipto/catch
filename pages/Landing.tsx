@@ -137,6 +137,13 @@ export const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
     onNavigate('marketplace');
   };
 
+  const validationImages = [
+    "https://images.unsplash.com/photo-1542281286-9e0a16bb7366?auto=format&fit=crop&w=400&q=80", // Data interface
+    "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?auto=format&fit=crop&w=400&q=80", // Code screen
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=400&q=80", // Analytics
+    "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=400&q=80"  // Matrix
+  ];
+
   return (
     <div className="min-h-screen bg-background flex flex-col overflow-x-hidden selection:bg-blue-100 selection:text-blue-900">
       
@@ -280,7 +287,7 @@ export const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
                     <div className="bg-white rounded-2xl p-8 shadow-xl shadow-purple-900/5 border border-slate-100 rotate-[2deg] hover:rotate-0 transition-transform duration-500 relative">
                         {/* Floating Success Badge */}
                         <motion.div 
-                            className="absolute -top-4 -right-4 bg-green-500 text-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 font-medium"
+                            className="absolute -top-4 -right-4 bg-green-500 text-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 font-medium z-10"
                             animate={{ y: [0, -5, 0] }}
                             transition={{ duration: 4, repeat: Infinity }}
                         >
@@ -288,9 +295,9 @@ export const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
                         </motion.div>
                         
                         <div className="grid grid-cols-2 gap-4">
-                             {[1, 2, 3, 4].map(i => (
+                             {validationImages.map((src, i) => (
                                  <div key={i} className="aspect-square bg-slate-100 rounded-lg overflow-hidden relative group">
-                                     <div className="absolute inset-0 flex items-center justify-center text-slate-300">Image {i}</div>
+                                     <img src={src} alt={`Validation sample ${i}`} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
                                      <div className="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/10 transition-colors" />
                                      <div className="absolute bottom-2 right-2 w-6 h-6 bg-white rounded-full flex items-center justify-center text-green-500 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity transform scale-75 group-hover:scale-100">
                                          <CheckCircle2 size={14} />
