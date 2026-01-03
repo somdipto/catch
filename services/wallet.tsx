@@ -1,0 +1,1 @@
+// This file is deprecated. Please use wallet-provider.tsx via services/wallet.ts

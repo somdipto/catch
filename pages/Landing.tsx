@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Button } from '../components/ui/Button';
 import { ArrowRight, CheckCircle2, Coins, FileText, ShieldCheck, Sun, Moon } from 'lucide-react';
-import { useWallet } from '../services/wallet';
+import { useWallet } from '../services/wallet-provider';
 import { useTheme } from '../services/theme';
 import { motion, useScroll, useSpring, useTransform, useMotionValue } from 'framer-motion';
 
@@ -425,4 +425,22 @@ export const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
               <div className="relative z-10">
                   <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">Ready to build the future of AI?</h2>
                   <p className="text-lg text-slate-400 mb-10 max-w-xl mx-auto">Join thousands of data scientists and contributors on Catch.</p>
-                  <Button size="lg" className="h-16 px-10 text-lg bg-white text-slate-900 hover:bg-slate-200 border-none
+                  <Button size="lg" className="h-16 px-10 text-lg bg-white text-slate-900 hover:bg-slate-200 border-none" onClick={handleStart}>
+                      Get Started Now
+                  </Button>
+              </div>
+          </div>
+          
+          <div className="mt-16 flex justify-between items-center text-slate-400 text-sm border-t border-slate-200 dark:border-zinc-800 pt-8">
+              <div>&copy; 2024 Catch Protocol</div>
+              <div className="flex gap-6">
+                  <a href="#" className="hover:text-slate-900 dark:hover:text-white">Twitter</a>
+                  <a href="#" className="hover:text-slate-900 dark:hover:text-white">Discord</a>
+                  <a href="#" className="hover:text-slate-900 dark:hover:text-white">Docs</a>
+              </div>
+          </div>
+      </div>
+
+    </div>
+  );
+};

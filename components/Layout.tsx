@@ -1,5 +1,5 @@
 import React from 'react';
-import { useWallet } from '../services/wallet';
+import { useWallet } from '../services/wallet-provider';
 import { useTheme } from '../services/theme';
 import { 
   LayoutDashboard, 

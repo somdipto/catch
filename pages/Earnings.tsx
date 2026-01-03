@@ -1,7 +1,7 @@
 import React from 'react';
 import { MOCK_EARNINGS_DATA } from '../constants';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { useWallet } from '../services/wallet';
+import { useWallet } from '../services/wallet-provider';
 import { Wallet, TrendingUp, History } from 'lucide-react';
 
 export const Earnings: React.FC = () => {

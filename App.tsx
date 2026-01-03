@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { WalletProvider } from './services/wallet';
+import { WalletProvider } from './services/wallet-provider';
 import { ThemeProvider } from './services/theme';
 import { Layout } from './components/Layout';
 import { Landing } from './pages/Landing';
