@@ -33,29 +33,29 @@ export const CreateBounty: React.FC<CreateBountyProps> = ({ onNavigate }) => {
   return (
     <div className="max-w-3xl mx-auto">
         <div className="mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">Create New Bounty</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">Create New Bounty</h1>
             <p className="text-slate-400">Define your data needs and fund the reward pool.</p>
         </div>
 
         {/* Progress Stepper */}
         <div className="flex items-center gap-4 mb-8">
             {[1, 2, 3].map(i => (
-                <div key={i} className={`h-1 flex-1 rounded-full ${step >= i ? 'bg-primary' : 'bg-surface border border-border'}`} />
+                <div key={i} className={`h-1 flex-1 rounded-full transition-colors duration-300 ${step >= i ? 'bg-primary' : 'bg-surface border border-border'}`} />
             ))}
         </div>
 
-        <div className="bg-surface border border-border rounded-xl p-8 space-y-8">
+        <div className="bg-surface border border-border rounded-xl p-6 md:p-8 space-y-8">
             {step === 1 && (
                 <div className="space-y-6 animate-in slide-in-from-right-8 duration-300">
                     <div className="grid gap-2">
                         <label className="text-sm font-medium text-slate-300">Bounty Title</label>
-                        <input type="text" className="h-10 px-4 bg-background border border-border rounded-md text-white focus:border-primary focus:outline-none" placeholder="e.g. Traffic Sign Image Collection" />
+                        <input type="text" className="h-10 px-4 bg-background border border-border rounded-md text-white focus:border-primary focus:outline-none w-full" placeholder="e.g. Traffic Sign Image Collection" />
                     </div>
                     
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="grid gap-2">
                             <label className="text-sm font-medium text-slate-300">Data Type</label>
-                            <select className="h-10 px-4 bg-background border border-border rounded-md text-white focus:border-primary focus:outline-none">
+                            <select className="h-10 px-4 bg-background border border-border rounded-md text-white focus:border-primary focus:outline-none w-full">
                                 {Object.values(DataType).map(type => (
                                     <option key={type}>{type}</option>
                                 ))}
@@ -63,13 +63,13 @@ export const CreateBounty: React.FC<CreateBountyProps> = ({ onNavigate }) => {
                         </div>
                          <div className="grid gap-2">
                             <label className="text-sm font-medium text-slate-300">Required Quantity</label>
-                            <input type="number" className="h-10 px-4 bg-background border border-border rounded-md text-white focus:border-primary focus:outline-none" placeholder="1000" />
+                            <input type="number" className="h-10 px-4 bg-background border border-border rounded-md text-white focus:border-primary focus:outline-none w-full" placeholder="1000" />
                         </div>
                     </div>
 
                     <div className="grid gap-2">
                         <label className="text-sm font-medium text-slate-300">Description</label>
-                        <textarea className="h-32 p-4 bg-background border border-border rounded-md text-white focus:border-primary focus:outline-none resize-none" placeholder="Describe exactly what you need..." />
+                        <textarea className="h-32 p-4 bg-background border border-border rounded-md text-white focus:border-primary focus:outline-none resize-none w-full" placeholder="Describe exactly what you need..." />
                     </div>
 
                     <div className="flex justify-end pt-4">
@@ -91,12 +91,12 @@ export const CreateBounty: React.FC<CreateBountyProps> = ({ onNavigate }) => {
                                         type="text" 
                                         value={rule}
                                         onChange={(e) => updateRule(idx, e.target.value)}
-                                        className="flex-1 h-10 px-4 bg-background border border-border rounded-md text-white focus:border-primary focus:outline-none"
+                                        className="flex-1 h-10 px-4 bg-background border border-border rounded-md text-white focus:border-primary focus:outline-none w-full"
                                         placeholder={`Rule #${idx + 1}`}
                                     />
                                     <button 
                                         onClick={() => removeRule(idx)}
-                                        className="w-10 h-10 flex items-center justify-center text-slate-500 hover:text-red-400 hover:bg-surface border border-border rounded-md"
+                                        className="w-10 h-10 flex-shrink-0 flex items-center justify-center text-slate-500 hover:text-red-400 hover:bg-surface border border-border rounded-md"
                                     >
                                         <Trash2 size={16} />
                                     </button>
@@ -125,7 +125,7 @@ export const CreateBounty: React.FC<CreateBountyProps> = ({ onNavigate }) => {
 
                     <div className="grid gap-2">
                         <label className="text-sm font-medium text-slate-300">Reward per Item (SOL)</label>
-                        <input type="number" className="h-10 px-4 bg-background border border-border rounded-md text-white focus:border-primary focus:outline-none" placeholder="0.005" />
+                        <input type="number" className="h-10 px-4 bg-background border border-border rounded-md text-white focus:border-primary focus:outline-none w-full" placeholder="0.005" />
                     </div>
 
                     <div className="flex items-center gap-4 p-4 bg-yellow-900/10 border border-yellow-900/30 rounded-md">

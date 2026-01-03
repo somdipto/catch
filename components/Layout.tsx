@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useWallet } from '../services/wallet-provider';
 import { useTheme } from '../services/theme';
 import { 
@@ -13,11 +13,13 @@ import {
   Search,
   ChevronRight,
   Sun,
-  Moon
+  Moon,
+  Menu,
+  X
 } from 'lucide-react';
 import { Button } from './ui/Button';
 import { cn } from '../lib/utils';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -28,6 +30,7 @@ interface LayoutProps {
 export const Layout: React.FC<LayoutProps> = ({ children, activePage, onNavigate }) => {
   const { connected, user, connect, disconnect } = useWallet();
   const { theme, toggleTheme } = useTheme();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const NAV_ITEMS = [
     { id: 'marketplace', label: 'Marketplace', icon: List },
@@ -39,18 +42,44 @@ export const Layout: React.FC<LayoutProps> = ({ children, activePage, onNavigate
     { id: 'docs', label: 'Docs', icon: FileText },
   ];
 
+  const handleNavigate = (page: string) => {
+    onNavigate(page);
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <div className="flex h-screen bg-background text-foreground overflow-hidden font-sans transition-colors duration-300">
-      {/* Sidebar - Glassmorphic Dark/Light */}
-      <aside className="w-72 border-r border-border flex flex-col bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl relative z-20 transition-colors duration-300">
-        <div className="p-6 pb-2 flex items-center gap-3 cursor-pointer group" onClick={() => onNavigate('landing')}>
-          <div className="w-10 h-10 bg-black dark:bg-white rounded-xl flex items-center justify-center shadow-lg shadow-black/10 dark:shadow-white/10 transition-shadow">
-            <span className="font-mono font-bold text-white dark:text-black text-xl">C</span>
-          </div>
-          <div>
-             <span className="text-lg font-bold tracking-tight text-slate-900 dark:text-white block leading-tight">Catch</span>
-             <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider">Protocol</span>
-          </div>
+      {/* Mobile Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-sm"
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Sidebar - Responsive Drawer */}
+      <aside className={cn(
+        "fixed inset-y-0 left-0 z-50 w-72 border-r border-border flex flex-col bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl transition-transform duration-300 ease-in-out md:translate-x-0 md:relative md:bg-white/50 md:dark:bg-zinc-900/50",
+        isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+      )}>
+        <div className="p-6 pb-2 flex items-center justify-between">
+            <div className="flex items-center gap-3 cursor-pointer group" onClick={() => handleNavigate('landing')}>
+                <div className="w-10 h-10 bg-black dark:bg-white rounded-xl flex items-center justify-center shadow-lg shadow-black/10 dark:shadow-white/10 transition-shadow">
+                    <span className="font-mono font-bold text-white dark:text-black text-xl">C</span>
+                </div>
+                <div>
+                    <span className="text-lg font-bold tracking-tight text-slate-900 dark:text-white block leading-tight">Catch</span>
+                    <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider">Protocol</span>
+                </div>
+            </div>
+            <button onClick={() => setIsMobileMenuOpen(false)} className="md:hidden p-2 text-slate-500">
+                <X size={20} />
+            </button>
         </div>
 
         <div className="px-4 py-6">
@@ -64,11 +93,11 @@ export const Layout: React.FC<LayoutProps> = ({ children, activePage, onNavigate
             </div>
         </div>
 
-        <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
+        <nav className="flex-1 px-4 space-y-1 overflow-y-auto no-scrollbar">
           {NAV_ITEMS.map((item) => (
             <motion.button
               key={item.id}
-              onClick={() => onNavigate(item.id)}
+              onClick={() => handleNavigate(item.id)}
               whileHover={{ x: 4 }}
               className={cn(
                 "w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all relative overflow-hidden group",
@@ -131,18 +160,26 @@ export const Layout: React.FC<LayoutProps> = ({ children, activePage, onNavigate
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col overflow-hidden relative bg-background">
+      <main className="flex-1 flex flex-col overflow-hidden relative bg-background w-full">
         {/* Top Header - Glassmorphism */}
-        <header className="h-20 flex items-center justify-between px-8 z-10 sticky top-0 bg-white/70 dark:bg-black/70 backdrop-blur-md border-b border-border">
-          <div className="flex flex-col">
-             <h1 className="text-2xl font-bold text-slate-900 dark:text-white capitalize tracking-tight">
-                {NAV_ITEMS.find(i => i.id === activePage)?.label || activePage}
-            </h1>
-            <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-1">
-                <span>Application</span>
-                <ChevronRight size={10} />
-                <span>{activePage}</span>
-            </div>
+        <header className="h-16 md:h-20 flex items-center justify-between px-4 md:px-8 z-10 sticky top-0 bg-white/70 dark:bg-black/70 backdrop-blur-md border-b border-border">
+          <div className="flex items-center gap-4">
+             <button 
+                className="md:hidden p-2 -ml-2 text-slate-600 dark:text-slate-300"
+                onClick={() => setIsMobileMenuOpen(true)}
+             >
+                 <Menu size={24} />
+             </button>
+             <div className="flex flex-col">
+                 <h1 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white capitalize tracking-tight truncate max-w-[200px] md:max-w-none">
+                    {NAV_ITEMS.find(i => i.id === activePage)?.label || activePage}
+                </h1>
+                <div className="hidden md:flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    <span>Application</span>
+                    <ChevronRight size={10} />
+                    <span>{activePage}</span>
+                </div>
+             </div>
           </div>
           
           <div className="flex items-center gap-4">
@@ -154,12 +191,12 @@ export const Layout: React.FC<LayoutProps> = ({ children, activePage, onNavigate
         </header>
 
         {/* Page Content */}
-        <div className="flex-1 overflow-y-auto px-8 pb-12 pt-4 scroll-smooth">
+        <div className="flex-1 overflow-y-auto px-4 md:px-8 pb-12 pt-4 scroll-smooth w-full">
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="max-w-7xl mx-auto"
+            className="max-w-7xl mx-auto w-full"
           >
              {children}
           </motion.div>

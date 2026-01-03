@@ -1,7 +1,7 @@
 import React from 'react';
 import { MOCK_BOUNTIES } from '../constants';
 import { Badge } from '../components/ui/Badge';
-import { Search, SlidersHorizontal } from 'lucide-react';
+import { Search, SlidersHorizontal, Clock, Users } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface MarketplaceProps {
@@ -17,13 +17,13 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onNavigate }) => {
   );
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col md:flex-row gap-6 justify-between items-start md:items-end">
+    <div className="space-y-6 md:space-y-8">
+      <div className="flex flex-col md:flex-row gap-4 md:gap-6 justify-between items-start md:items-end">
         <div>
-           <h2 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Marketplace</h2>
-           <p className="text-slate-500 dark:text-slate-400 mt-2 text-lg">Browse active data collection requests from AI companies.</p>
+           <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Marketplace</h2>
+           <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm md:text-lg">Browse active data collection requests from AI companies.</p>
         </div>
-        <div className="flex gap-3 w-full md:w-auto">
+        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
             <div className="relative flex-1 md:w-80 group">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4 group-focus-within:text-slate-900 dark:group-focus-within:text-white transition-colors" />
                 <input 
@@ -34,13 +34,14 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onNavigate }) => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
-            <button className="h-11 px-4 border border-slate-200 dark:border-zinc-700 rounded-xl bg-white dark:bg-zinc-900 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-zinc-800 flex items-center gap-2 text-sm font-medium shadow-sm transition-all hover:shadow-md">
+            <button className="h-11 px-4 border border-slate-200 dark:border-zinc-700 rounded-xl bg-white dark:bg-zinc-900 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-zinc-800 flex items-center justify-center gap-2 text-sm font-medium shadow-sm transition-all hover:shadow-md">
                 <SlidersHorizontal size={16} /> Filters
             </button>
         </div>
       </div>
 
-      <div className="bg-white dark:bg-zinc-900/50 border border-slate-200 dark:border-zinc-800 rounded-2xl overflow-hidden shadow-xl shadow-slate-200/40 dark:shadow-black/20">
+      {/* Desktop Table View */}
+      <div className="hidden md:block bg-white dark:bg-zinc-900/50 border border-slate-200 dark:border-zinc-800 rounded-2xl overflow-hidden shadow-xl shadow-slate-200/40 dark:shadow-black/20">
         <table className="w-full text-left text-sm">
           <thead className="bg-slate-50/80 dark:bg-zinc-900/80 border-b border-slate-200 dark:border-zinc-800">
             <tr>
@@ -108,7 +109,55 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onNavigate }) => {
             ))}
           </tbody>
         </table>
-        {filteredBounties.length === 0 && (
+      </div>
+
+      {/* Mobile Card View */}
+      <div className="md:hidden space-y-4">
+        {filteredBounties.map((b, index) => (
+            <motion.div
+                key={b.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+                onClick={() => onNavigate('bounty-detail', { bountyId: b.id })}
+                className="bg-white dark:bg-zinc-900/50 border border-slate-200 dark:border-zinc-800 rounded-xl p-4 shadow-sm active:scale-[0.98] transition-transform"
+            >
+                <div className="flex justify-between items-start mb-3">
+                    <div className="flex items-center gap-2">
+                        <Badge status={b.status} className="text-[10px]" />
+                        <span className="text-xs text-slate-400 flex items-center gap-1"><Clock size={10} /> {b.deadline}</span>
+                    </div>
+                    <div className="font-mono font-bold text-slate-900 dark:text-white">{b.rewardPool} SOL</div>
+                </div>
+                
+                <h3 className="font-bold text-slate-900 dark:text-white mb-2">{b.title}</h3>
+                
+                <div className="flex flex-wrap gap-2 mb-4">
+                    <Badge status={b.dataType} className="scale-90 origin-left" />
+                    {b.tags.slice(0, 2).map(t => (
+                        <span key={t} className="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-zinc-700">
+                            #{t}
+                        </span>
+                    ))}
+                </div>
+
+                <div className="space-y-2">
+                    <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400">
+                        <span>Progress</span>
+                        <span>{Math.round((b.acceptedQuantity / b.requiredQuantity) * 100)}%</span>
+                    </div>
+                    <div className="h-1.5 bg-slate-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                        <div 
+                            className="h-full bg-slate-900 dark:bg-white rounded-full" 
+                            style={{ width: `${(b.acceptedQuantity / b.requiredQuantity) * 100}%` }}
+                        />
+                    </div>
+                </div>
+            </motion.div>
+        ))}
+      </div>
+
+      {filteredBounties.length === 0 && (
             <div className="p-16 text-center">
                 <div className="w-16 h-16 bg-slate-50 dark:bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Search className="text-slate-300 dark:text-zinc-600" />
@@ -117,7 +166,6 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onNavigate }) => {
                 <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Try adjusting your filters or search term.</p>
             </div>
         )}
-      </div>
     </div>
   );
 };

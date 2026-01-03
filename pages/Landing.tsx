@@ -121,7 +121,7 @@ const MatrixSphere = () => {
 
     return (
         <div 
-            className="relative w-[320px] h-[320px] md:w-[400px] md:h-[400px] mx-auto flex items-center justify-center perspective-[1000px] group cursor-pointer"
+            className="relative w-[300px] h-[300px] md:w-[400px] md:h-[400px] mx-auto flex items-center justify-center perspective-[1000px] group cursor-pointer"
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
         >
@@ -145,9 +145,9 @@ const MatrixSphere = () => {
                     transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
                 >
                     {points.map((pt, i) => {
-                        const x = pt.pos[0] * radius;
-                        const y = pt.pos[1] * radius;
-                        const z = pt.pos[2] * radius;
+                        const x = pt.pos[0] * (radius * 0.8) ; // scale down slightly for mobile safety
+                        const y = pt.pos[1] * (radius * 0.8);
+                        const z = pt.pos[2] * (radius * 0.8);
 
                         return (
                             <motion.div
@@ -222,12 +222,12 @@ export const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden">
+      <section className="relative pt-28 md:pt-32 pb-16 md:pb-20 overflow-hidden">
         {/* Subtle Gradient Glow instead of Blue Blobs */}
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-b from-slate-200/40 to-transparent dark:from-zinc-800/20 rounded-full blur-3xl opacity-30 -mr-40 -mt-40 pointer-events-none" />
+        <div className="absolute top-0 right-0 w-[500px] md:w-[800px] h-[500px] md:h-[800px] bg-gradient-to-b from-slate-200/40 to-transparent dark:from-zinc-800/20 rounded-full blur-3xl opacity-30 -mr-20 -mt-20 md:-mr-40 md:-mt-40 pointer-events-none" />
 
         <div className="container mx-auto px-6 relative z-10">
-            <div className="flex flex-col md:flex-row items-center gap-16">
+            <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
                 <div className="flex-1 text-center md:text-left relative">
                     <motion.div 
                         initial={{ opacity: 0, y: 20 }}
@@ -238,49 +238,49 @@ export const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
                             <span className="w-2 h-2 inline-block rounded-full bg-slate-900 dark:bg-white mr-2 animate-pulse"></span>
                             Live on Solana Devnet
                         </div>
-                        <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-slate-900 dark:text-white mb-6 leading-[1.1]">
+                        <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight text-slate-900 dark:text-white mb-6 leading-tight md:leading-[1.1]">
                             Data for AI, <br />
                             <span className="gradient-text">verified by humans.</span>
                         </h1>
-                        <p className="text-xl text-slate-500 dark:text-slate-400 mb-10 max-w-xl leading-relaxed mx-auto md:mx-0">
+                        <p className="text-lg md:text-xl text-slate-500 dark:text-slate-400 mb-8 md:mb-10 max-w-xl leading-relaxed mx-auto md:mx-0">
                             The first decentralized marketplace for ML datasets. 
                             Post a bounty, get validated data, and pay instantly on-chain.
                         </p>
                         <div className="flex flex-col sm:flex-row items-center gap-4 justify-center md:justify-start">
-                            <Button size="lg" onClick={handleStart} className="w-full sm:w-auto text-lg px-8 h-14 rounded-full">
+                            <Button size="lg" onClick={handleStart} className="w-full sm:w-auto text-lg px-8 h-12 md:h-14 rounded-full">
                                 Start Collecting <ArrowRight className="ml-2 w-5 h-5" />
                             </Button>
-                            <Button size="lg" variant="outline" onClick={() => onNavigate('marketplace')} className="w-full sm:w-auto h-14 rounded-full bg-white/50 dark:bg-black/20 backdrop-blur-sm">
+                            <Button size="lg" variant="outline" onClick={() => onNavigate('marketplace')} className="w-full sm:w-auto h-12 md:h-14 rounded-full bg-white/50 dark:bg-black/20 backdrop-blur-sm">
                                 View Marketplace
                             </Button>
                         </div>
                     </motion.div>
                 </div>
-                <div className="flex-1 w-full max-w-lg flex justify-center">
+                <div className="flex-1 w-full max-w-lg flex justify-center order-first md:order-last mb-8 md:mb-0">
                     <MatrixSphere />
                 </div>
             </div>
         </div>
         
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
-             <ScrollArrow />
+        <div className="absolute bottom-4 md:bottom-10 left-1/2 -translate-x-1/2">
+             <ScrollArrow className="scale-75 md:scale-100" />
         </div>
       </section>
 
       {/* Feature Storytelling */}
-      <div className="relative py-20 bg-slate-50/50 dark:bg-zinc-900/30 border-y border-border">
+      <div className="relative py-16 md:py-20 bg-slate-50/50 dark:bg-zinc-900/30 border-y border-border">
         
         {/* 1. Post Bounty */}
-        <div className="container mx-auto px-6 relative mb-32">
+        <div className="container mx-auto px-6 relative mb-24 md:mb-32">
             <div className="flex flex-col md:flex-row items-center gap-12 max-w-5xl mx-auto">
                 <motion.div 
-                    className="flex-1 order-2 md:order-1"
+                    className="flex-1 order-2 md:order-1 w-full"
                     initial={{ opacity: 0, x: -50 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true, margin: "-100px" }}
                     transition={{ duration: 0.6 }}
                 >
-                    <div className="glass-panel rounded-2xl p-8 rotate-[-2deg] hover:rotate-0 transition-transform duration-500">
+                    <div className="glass-panel rounded-2xl p-6 md:p-8 rotate-0 md:rotate-[-2deg] hover:rotate-0 transition-transform duration-500">
                          {/* Mock UI Card */}
                          <div className="flex items-center justify-between mb-6 border-b border-border pb-4">
                             <div className="flex gap-2">
@@ -293,7 +293,7 @@ export const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
                          <div className="space-y-4 font-mono text-sm">
                              <div className="flex gap-4">
                                  <span className="text-slate-900 dark:text-white font-bold">"title":</span>
-                                 <span className="text-slate-600 dark:text-slate-300">"Street Sign Images"</span>
+                                 <span className="text-slate-600 dark:text-slate-300 break-words">"Street Sign Images"</span>
                              </div>
                              <div className="flex gap-4">
                                  <span className="text-slate-900 dark:text-white font-bold">"reward":</span>
@@ -301,7 +301,7 @@ export const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
                              </div>
                              <div className="flex gap-4">
                                  <span className="text-slate-900 dark:text-white font-bold">"type":</span>
-                                 <span className="text-slate-500 dark:text-zinc-500">"IMAGE_CLASSIFICATION"</span>
+                                 <span className="text-slate-500 dark:text-zinc-500 truncate">"IMAGE_CLASSIFICATION"</span>
                              </div>
                              <div className="mt-4 p-3 bg-slate-100 dark:bg-zinc-800 rounded border border-border text-slate-500 text-xs">
                                  Publishing to smart contract...
@@ -313,7 +313,7 @@ export const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
                     <div className="w-12 h-12 bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-2xl flex items-center justify-center text-slate-900 dark:text-white mb-6 shadow-sm">
                         <FileText size={24} />
                     </div>
-                    <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">Request specific data.</h2>
+                    <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">Request specific data.</h2>
                     <p className="text-lg text-slate-500 dark:text-slate-400 leading-relaxed">
                         Don't buy generic datasets. Create a bounty for exactly what you need—whether it's audio, text, or images. Define strict validation rules upfront.
                     </p>
@@ -323,25 +323,25 @@ export const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
         </div>
 
         {/* 2. Validation */}
-        <div className="container mx-auto px-6 relative mb-32">
+        <div className="container mx-auto px-6 relative mb-24 md:mb-32">
             <div className="flex flex-col md:flex-row items-center gap-12 max-w-5xl mx-auto">
                  <div className="flex-1">
                     <div className="w-12 h-12 bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-2xl flex items-center justify-center text-slate-900 dark:text-white mb-6 shadow-sm">
                         <ShieldCheck size={24} />
                     </div>
-                    <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">Consensus Validation.</h2>
+                    <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">Consensus Validation.</h2>
                     <p className="text-lg text-slate-500 dark:text-slate-400 leading-relaxed">
                         Uploaded data isn't accepted blindly. A decentralized network of validators reviews submissions against your criteria. Only high-quality data passes.
                     </p>
                 </div>
                 <motion.div 
-                    className="flex-1"
+                    className="flex-1 w-full"
                     initial={{ opacity: 0, x: 50 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true, margin: "-100px" }}
                     transition={{ duration: 0.6 }}
                 >
-                    <div className="glass-panel rounded-2xl p-8 rotate-[2deg] hover:rotate-0 transition-transform duration-500 relative">
+                    <div className="glass-panel rounded-2xl p-6 md:p-8 rotate-0 md:rotate-[2deg] hover:rotate-0 transition-transform duration-500 relative">
                         {/* Floating Success Badge - Sleek Green */}
                         <motion.div 
                             className="absolute -top-4 -right-4 bg-white dark:bg-zinc-800 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-900 px-4 py-2 rounded-full shadow-lg flex items-center gap-2 font-medium z-10"
@@ -369,21 +369,21 @@ export const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
         </div>
 
         {/* 3. Payout */}
-         <div className="container mx-auto px-6 relative mb-24">
+         <div className="container mx-auto px-6 relative mb-16 md:mb-24">
             <div className="flex flex-col md:flex-row items-center gap-12 max-w-5xl mx-auto">
                 <motion.div 
-                    className="flex-1 order-2 md:order-1"
+                    className="flex-1 order-2 md:order-1 w-full"
                     initial={{ opacity: 0, scale: 0.9 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true, margin: "-100px" }}
                     transition={{ duration: 0.6 }}
                 >
-                    <div className="bg-gradient-to-br from-slate-900 to-slate-800 dark:from-black dark:to-zinc-900 rounded-2xl p-8 shadow-2xl text-white relative overflow-hidden border border-slate-700 dark:border-zinc-800">
+                    <div className="bg-gradient-to-br from-slate-900 to-slate-800 dark:from-black dark:to-zinc-900 rounded-2xl p-6 md:p-8 shadow-2xl text-white relative overflow-hidden border border-slate-700 dark:border-zinc-800">
                         <div className="absolute top-0 right-0 p-32 bg-white/5 rounded-full blur-[100px] opacity-20" />
                         
                         <div className="relative z-10">
                             <div className="text-slate-400 text-sm mb-1 font-medium">Your Earnings</div>
-                            <div className="text-5xl font-mono font-bold mb-6 flex items-baseline gap-2">
+                            <div className="text-4xl md:text-5xl font-mono font-bold mb-6 flex items-baseline gap-2">
                                 42.50 <span className="text-lg text-slate-500">SOL</span>
                             </div>
                             
@@ -406,7 +406,7 @@ export const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
                     <div className="w-12 h-12 bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-2xl flex items-center justify-center text-slate-900 dark:text-white mb-6 shadow-sm">
                         <Coins size={24} />
                     </div>
-                    <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">Instant, Global Payouts.</h2>
+                    <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">Instant, Global Payouts.</h2>
                     <p className="text-lg text-slate-500 dark:text-slate-400 leading-relaxed">
                         No invoices. No Net-30 terms. As soon as data is validated, the smart contract releases funds directly to the contributor's wallet.
                     </p>
@@ -417,21 +417,21 @@ export const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
       </div>
 
       {/* CTA Footer */}
-      <div className="py-32 container mx-auto px-6 text-center">
-          <div className="max-w-3xl mx-auto bg-slate-900 dark:bg-zinc-950 rounded-3xl p-12 md:p-20 relative overflow-hidden text-white shadow-2xl border border-slate-800 dark:border-zinc-800">
+      <div className="py-20 md:py-32 container mx-auto px-6 text-center">
+          <div className="max-w-3xl mx-auto bg-slate-900 dark:bg-zinc-950 rounded-3xl p-8 md:p-20 relative overflow-hidden text-white shadow-2xl border border-slate-800 dark:border-zinc-800">
               <div className="absolute top-0 left-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10" />
               <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-[120px]" />
               
               <div className="relative z-10">
-                  <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">Ready to build the future of AI?</h2>
-                  <p className="text-lg text-slate-400 mb-10 max-w-xl mx-auto">Join thousands of data scientists and contributors on Catch.</p>
-                  <Button size="lg" className="h-16 px-10 text-lg bg-white text-slate-900 hover:bg-slate-200 border-none" onClick={handleStart}>
+                  <h2 className="text-3xl md:text-5xl font-bold mb-6 tracking-tight">Ready to build the future of AI?</h2>
+                  <p className="text-base md:text-lg text-slate-400 mb-8 md:mb-10 max-w-xl mx-auto">Join thousands of data scientists and contributors on Catch.</p>
+                  <Button size="lg" className="w-full md:w-auto h-14 md:h-16 px-10 text-lg bg-white text-slate-900 hover:bg-slate-200 border-none" onClick={handleStart}>
                       Get Started Now
                   </Button>
               </div>
           </div>
           
-          <div className="mt-16 flex justify-between items-center text-slate-400 text-sm border-t border-slate-200 dark:border-zinc-800 pt-8">
+          <div className="mt-16 flex flex-col md:flex-row justify-between items-center text-slate-400 text-sm border-t border-slate-200 dark:border-zinc-800 pt-8 gap-4">
               <div>&copy; 2024 Catch Protocol</div>
               <div className="flex gap-6">
                   <a href="#" className="hover:text-slate-900 dark:hover:text-white">Twitter</a>

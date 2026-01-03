@@ -40,22 +40,22 @@ export const BountyDetail: React.FC<BountyDetailProps> = ({ bountyId, onBack }) 
   };
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-6 md:space-y-8 pb-12">
       <Button variant="ghost" size="sm" onClick={onBack} className="pl-0 gap-2 text-slate-500 hover:text-slate-900">
         <ArrowLeft size={16} /> Back to Marketplace
       </Button>
 
       {/* Hero Header */}
-      <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm relative overflow-hidden">
+      <div className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-sm relative overflow-hidden">
         <div className="absolute top-0 right-0 p-32 bg-blue-50 rounded-full blur-3xl opacity-50 -mr-10 -mt-10" />
         
-        <div className="relative z-10 flex flex-col md:flex-row justify-between gap-8">
+        <div className="relative z-10 flex flex-col md:flex-row justify-between gap-6 md:gap-8">
             <div className="space-y-4 max-w-2xl">
                 <div className="flex items-center gap-3">
                     <Badge status={bounty.dataType} />
                     <Badge status={bounty.status} />
                 </div>
-                <h1 className="text-4xl font-bold text-slate-900 tracking-tight">{bounty.title}</h1>
+                <h1 className="text-2xl md:text-4xl font-bold text-slate-900 tracking-tight leading-tight">{bounty.title}</h1>
                 <div className="flex flex-wrap gap-2">
                     {bounty.tags.map(t => (
                         <span key={t} className="text-xs px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 font-medium">
@@ -65,18 +65,18 @@ export const BountyDetail: React.FC<BountyDetailProps> = ({ bountyId, onBack }) 
                 </div>
             </div>
 
-            <div className="flex gap-4">
-                 <div className="bg-slate-50 rounded-2xl p-4 min-w-[140px] border border-slate-100">
+            <div className="flex gap-4 overflow-x-auto pb-2 md:pb-0">
+                 <div className="bg-slate-50 rounded-2xl p-4 min-w-[140px] flex-1 md:flex-none border border-slate-100">
                      <div className="flex items-center gap-2 text-slate-500 mb-1 text-xs font-semibold uppercase tracking-wider">
                          <Coins size={14} /> Reward Pool
                      </div>
-                     <div className="text-2xl font-mono font-bold text-slate-900">{bounty.rewardPool} SOL</div>
+                     <div className="text-xl md:text-2xl font-mono font-bold text-slate-900 whitespace-nowrap">{bounty.rewardPool} SOL</div>
                  </div>
-                 <div className="bg-slate-50 rounded-2xl p-4 min-w-[140px] border border-slate-100">
+                 <div className="bg-slate-50 rounded-2xl p-4 min-w-[140px] flex-1 md:flex-none border border-slate-100">
                      <div className="flex items-center gap-2 text-slate-500 mb-1 text-xs font-semibold uppercase tracking-wider">
                          <Clock size={14} /> Per Unit
                      </div>
-                     <div className="text-2xl font-mono font-bold text-slate-900">{bounty.rewardPerUnit}</div>
+                     <div className="text-xl md:text-2xl font-mono font-bold text-slate-900 whitespace-nowrap">{bounty.rewardPerUnit}</div>
                  </div>
             </div>
         </div>
@@ -87,12 +87,12 @@ export const BountyDetail: React.FC<BountyDetailProps> = ({ bountyId, onBack }) 
         {/* Left Column */}
         <div className="lg:col-span-2 space-y-8">
             {/* Tabs */}
-            <div className="flex border-b border-slate-200">
+            <div className="flex border-b border-slate-200 overflow-x-auto">
                 {['Overview', 'Submissions', 'Validators'].map(tab => (
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab as any)}
-                        className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors relative ${
+                        className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors relative whitespace-nowrap ${
                             activeTab.toLowerCase() === tab.toLowerCase()
                                 ? 'border-blue-600 text-blue-600'
                                 : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -114,7 +114,7 @@ export const BountyDetail: React.FC<BountyDetailProps> = ({ bountyId, onBack }) 
                     >
                         <section className="prose prose-slate max-w-none">
                             <h3 className="text-lg font-bold text-slate-900 mb-4">Description</h3>
-                            <p className="text-slate-600 leading-relaxed bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <p className="text-slate-600 leading-relaxed bg-slate-50 p-6 rounded-2xl border border-slate-100 text-sm md:text-base">
                                 {bounty.description}
                             </p>
                         </section>
@@ -123,11 +123,11 @@ export const BountyDetail: React.FC<BountyDetailProps> = ({ bountyId, onBack }) 
                             <h3 className="text-lg font-bold text-slate-900 mb-4">Validation Rules</h3>
                             <div className="grid gap-3">
                                 {bounty.validationRules.map((rule, i) => (
-                                    <div key={i} className="flex items-center gap-4 p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
-                                        <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                                    <div key={i} className="flex items-start md:items-center gap-4 p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
+                                        <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 mt-0.5 md:mt-0">
                                             <AlertCircle size={16} />
                                         </div>
-                                        <span className="text-slate-700 text-sm font-medium">{rule}</span>
+                                        <span className="text-slate-700 text-sm font-medium leading-relaxed">{rule}</span>
                                     </div>
                                 ))}
                             </div>
@@ -146,7 +146,7 @@ export const BountyDetail: React.FC<BountyDetailProps> = ({ bountyId, onBack }) 
                 )}
                 
                 {activeTab === 'validators' && (
-                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-2 gap-4">
+                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {[1,2,3,4].map(i => (
                             <div key={i} className="flex items-center gap-4 p-4 bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-slate-200 to-slate-300" />
@@ -166,7 +166,7 @@ export const BountyDetail: React.FC<BountyDetailProps> = ({ bountyId, onBack }) 
 
         {/* Right Column: Upload Card */}
         <div className="space-y-6">
-            <div className="p-8 bg-white border border-slate-200 rounded-3xl shadow-xl shadow-slate-200/50 sticky top-24">
+            <div className="p-6 md:p-8 bg-white border border-slate-200 rounded-3xl shadow-xl shadow-slate-200/50 sticky top-24">
                 <h3 className="text-xl font-bold text-slate-900 mb-6">Contribute Data</h3>
                 
                 {uploadStep === 'idle' && (
