@@ -1,10 +1,8 @@
-import React, { useRef } from 'react';
+import React, { useMemo } from 'react';
 import { Button } from '../components/ui/Button';
-import { ArrowRight, CheckCircle2, Database, ShieldCheck, Coins, FileText, Image, Mic } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Coins, FileText, ShieldCheck } from 'lucide-react';
 import { useWallet } from '../services/wallet';
-import { MOCK_BOUNTIES } from '../constants';
-import { Badge } from '../components/ui/Badge';
-import { motion, useScroll, useTransform, useSpring, useInView } from 'framer-motion';
+import { motion, useScroll, useSpring } from 'framer-motion';
 
 interface LandingProps {
   onNavigate: (page: string) => void;
@@ -37,7 +35,6 @@ const ScrollArrow = ({ className }: { className?: string }) => {
 };
 
 const ConnectingLine = ({ from, to }: { from: 'left' | 'right', to: 'left' | 'right' }) => {
-    // Simplified S-curve for visual flow
     return (
         <div className="absolute top-full left-1/2 -translate-x-1/2 h-32 w-full max-w-4xl z-0 pointer-events-none hidden md:block">
              <svg width="100%" height="100%" viewBox="0 0 800 120" fill="none" preserveAspectRatio="none">
@@ -60,53 +57,69 @@ const ConnectingLine = ({ from, to }: { from: 'left' | 'right', to: 'left' | 'ri
     )
 }
 
-const FloatingOrb = () => {
-    return (
-        <div className="relative w-64 h-64 md:w-96 md:h-96 mx-auto perspective-1000">
-             {/* Core Glow */}
-             <motion.div 
-                className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-400/30 to-purple-400/30 blur-3xl"
-                animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
-                transition={{ duration: 8, repeat: Infinity }}
-             />
-             
-             {/* Central Sphere */}
-             <div className="absolute inset-12 bg-gradient-to-br from-white to-blue-50 rounded-full shadow-2xl shadow-blue-500/20 border border-white/50 backdrop-blur-sm z-10 flex items-center justify-center">
-                 <div className="text-center">
-                     <div className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">Catch</div>
-                     <div className="text-xs text-slate-400 mt-1 font-mono tracking-widest">PROTOCOL</div>
-                 </div>
-             </div>
+const MatrixSphere = () => {
+    const radius = 160; // pixel radius
+    const count = 100; // number of points
 
-             {/* Orbiting Elements */}
-             {[
-                 { icon: FileText, color: 'text-blue-500', delay: 0, x: 120, y: -40 },
-                 { icon: Image, color: 'text-purple-500', delay: 2, x: -100, y: 80 },
-                 { icon: Mic, color: 'text-cyan-500', delay: 4, x: 80, y: 100 },
-                 { icon: Database, color: 'text-indigo-500', delay: 1, x: -110, y: -60 },
-             ].map((item, i) => (
-                 <motion.div
-                    key={i}
-                    className={`absolute top-1/2 left-1/2 w-12 h-12 -ml-6 -mt-6 bg-white rounded-xl shadow-lg border border-slate-100 flex items-center justify-center z-20 ${item.color}`}
-                    animate={{
-                        x: [item.x, -item.x, item.x],
-                        y: [item.y, -item.y * 0.5, item.y],
-                        scale: [1, 1.1, 1],
-                        rotate: [0, 10, -10, 0]
-                    }}
-                    transition={{
-                        duration: 15 + i * 2,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        delay: item.delay
-                    }}
-                 >
-                     <item.icon size={24} />
-                 </motion.div>
-             ))}
+    // Generate points on a sphere using Fibonacci lattice
+    const points = useMemo(() => {
+        const p = [];
+        const offset = 2 / count;
+        const increment = Math.PI * (3 - Math.sqrt(5));
+
+        for (let i = 0; i < count; i++) {
+            const y = ((i * offset) - 1) + (offset / 2);
+            const r = Math.sqrt(1 - Math.pow(y, 2));
+            const phi = ((i + 1) % count) * increment;
+
+            const x = Math.cos(phi) * r;
+            const z = Math.sin(phi) * r;
+
+            p.push({ 
+                pos: [x, y, z], 
+                val: Math.random() > 0.5 ? '1' : '0',
+                delay: Math.random() * 2 
+            });
+        }
+        return p;
+    }, []);
+
+    return (
+        <div className="relative w-[320px] h-[320px] md:w-[400px] md:h-[400px] mx-auto flex items-center justify-center perspective-[1000px]">
+            {/* Core Glow */}
+            <div className="absolute inset-0 bg-green-500/10 blur-[80px] rounded-full animate-pulse-slow" />
+            
+            <motion.div 
+                className="w-full h-full relative"
+                style={{ transformStyle: "preserve-3d" }}
+                animate={{ rotateY: 360, rotateZ: 20, rotateX: -20 }}
+                transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+            >
+                {points.map((pt, i) => {
+                    const x = pt.pos[0] * radius;
+                    const y = pt.pos[1] * radius;
+                    const z = pt.pos[2] * radius;
+
+                    return (
+                        <motion.div
+                            key={i}
+                            className="absolute top-1/2 left-1/2 font-mono font-bold text-lg select-none"
+                            style={{
+                                transform: `translate3d(${x}px, ${y}px, ${z}px)`,
+                                color: '#22c55e', // tailwind green-500
+                                textShadow: '0 0 5px rgba(34, 197, 94, 0.8)',
+                            }}
+                            animate={{ opacity: [0.4, 1, 0.4] }}
+                            transition={{ duration: 3, delay: pt.delay, repeat: Infinity }}
+                        >
+                            {pt.val}
+                        </motion.div>
+                    );
+                })}
+            </motion.div>
         </div>
-    )
-}
+    );
+};
 
 // --- MAIN LANDING PAGE ---
 
@@ -179,8 +192,8 @@ export const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
                         </div>
                     </motion.div>
                 </div>
-                <div className="flex-1 w-full max-w-lg">
-                    <FloatingOrb />
+                <div className="flex-1 w-full max-w-lg flex justify-center">
+                    <MatrixSphere />
                 </div>
             </div>
         </div>
