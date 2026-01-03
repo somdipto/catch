@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { WalletProvider } from './services/wallet';
+import { ThemeProvider } from './services/theme';
 import { Layout } from './components/Layout';
 import { Landing } from './pages/Landing';
 import { Marketplace } from './pages/Marketplace';
@@ -50,35 +51,5 @@ const App = () => {
         // Fallback for not implemented pages
         return (
           <Layout activePage={currentPage} onNavigate={navigate}>
-             <div className="flex flex-col items-center justify-center h-[60vh] text-slate-500">
-                <h2 className="text-xl font-bold text-white mb-2">Coming Soon</h2>
-                <p>The {currentPage} page is under construction.</p>
-                <button 
-                    onClick={() => navigate('marketplace')}
-                    className="mt-6 text-primary hover:underline"
-                >
-                    Return to Marketplace
-                </button>
-             </div>
-          </Layout>
-        );
-    }
-  };
-
-  // Special case for Landing page which has no sidebar
-  if (currentPage === 'landing') {
-    return (
-        <WalletProvider>
-            <Landing onNavigate={navigate} />
-        </WalletProvider>
-    );
-  }
-
-  return (
-    <WalletProvider>
-      {renderPage()}
-    </WalletProvider>
-  );
-};
-
-export default App;
+             <div className="flex flex-col items-center justify-center h-[60vh] text-slate-500 dark:text-slate-400">
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb

@@ -22,11 +22,16 @@ export const Button: React.FC<CombinedProps> = ({
 }) => {
   
   const variants = {
-    primary: 'bg-slate-900 text-white hover:bg-slate-800 shadow-lg shadow-slate-900/20 border border-transparent',
-    secondary: 'bg-white text-slate-900 border border-slate-200 hover:bg-slate-50 shadow-sm',
-    outline: 'border border-slate-200 bg-transparent hover:bg-slate-50 text-slate-700',
-    ghost: 'bg-transparent hover:bg-slate-100 text-slate-600',
-    danger: 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200',
+    // Primary: Black in light mode, White in dark mode
+    primary: 'bg-black text-white hover:bg-slate-800 dark:bg-white dark:text-black dark:hover:bg-slate-200 shadow-lg shadow-black/10 dark:shadow-white/5 border border-transparent',
+    // Secondary: White in light, Zinc 800 in dark
+    secondary: 'bg-white text-slate-900 border border-slate-200 hover:bg-slate-50 dark:bg-zinc-800 dark:border-zinc-700 dark:text-slate-100 dark:hover:bg-zinc-700 shadow-sm',
+    // Outline: Transparent border
+    outline: 'border border-slate-200 bg-transparent hover:bg-slate-50 text-slate-700 dark:border-zinc-700 dark:text-slate-300 dark:hover:bg-zinc-800/50',
+    // Ghost: Transparent no border
+    ghost: 'bg-transparent hover:bg-slate-100 text-slate-600 dark:text-slate-400 dark:hover:bg-zinc-800 dark:hover:text-slate-200',
+    // Danger
+    danger: 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 dark:bg-red-950/20 dark:text-red-400 dark:border-red-900/50',
   };
 
   const sizes = {
@@ -40,7 +45,7 @@ export const Button: React.FC<CombinedProps> = ({
       whileHover={{ scale: 1.02, y: -1 }}
       whileTap={{ scale: 0.98 }}
       className={cn(
-        'relative overflow-hidden inline-flex items-center justify-center font-medium transition-all rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-900 disabled:opacity-50 disabled:pointer-events-none',
+        'relative overflow-hidden inline-flex items-center justify-center font-medium transition-all rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-900 dark:focus:ring-white disabled:opacity-50 disabled:pointer-events-none',
         variants[variant],
         sizes[size],
         className

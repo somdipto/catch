@@ -8,29 +8,31 @@ interface BadgeProps {
 }
 
 export const Badge: React.FC<BadgeProps> = ({ status, className = '' }) => {
-  let variant = 'bg-slate-100 text-slate-600 border-slate-200';
+  let variant = 'bg-slate-100 text-slate-600 border-slate-200 dark:bg-zinc-800 dark:text-slate-300 dark:border-zinc-700';
 
   switch (status) {
     case BountyStatus.OPEN:
     case SubmissionStatus.APPROVED:
     case 'Completed':
-      variant = 'bg-emerald-50 text-emerald-600 border-emerald-100';
+      // Green -> Monochrome Green/Grayish (Desaturated) or just bold white/black
+      // Staying sleek: Dark mode -> High contrast border
+      variant = 'bg-slate-100 text-slate-900 border-slate-300 dark:bg-zinc-900 dark:text-white dark:border-slate-500';
       break;
     case BountyStatus.FILLED:
     case BountyStatus.VALIDATING:
     case SubmissionStatus.VALIDATING:
     case 'Pending':
-      variant = 'bg-amber-50 text-amber-600 border-amber-100';
+      variant = 'bg-slate-50 text-slate-500 border-slate-200 border-dashed dark:bg-zinc-900 dark:text-zinc-400 dark:border-zinc-700';
       break;
     case BountyStatus.CLOSED:
     case SubmissionStatus.REJECTED:
-      variant = 'bg-rose-50 text-rose-600 border-rose-100';
+      variant = 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white';
       break;
     case DataType.IMAGE:
     case DataType.TEXT:
     case DataType.HANDWRITING:
     case DataType.AUDIO:
-      variant = 'bg-blue-50 text-blue-600 border-blue-100';
+      variant = 'glass backdrop-blur-md text-slate-700 border-slate-200 dark:text-slate-200 dark:border-slate-700';
       break;
   }
 
