@@ -52,4 +52,31 @@ const App = () => {
         return (
           <Layout activePage={currentPage} onNavigate={navigate}>
              <div className="flex flex-col items-center justify-center h-[60vh] text-slate-500 dark:text-slate-400">
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Coming Soon</h2>
+                <p>The {currentPage} page is under construction.</p>
+                <button 
+                    onClick={() => navigate('marketplace')}
+                    className="mt-6 text-slate-900 dark:text-white underline"
+                >
+                    Return to Marketplace
+                </button>
+             </div>
+          </Layout>
+        );
+    }
+  };
+
+  return (
+    <ThemeProvider defaultTheme="dark" storageKey="catch-theme">
+      <WalletProvider>
+        {currentPage === 'landing' ? (
+             <Landing onNavigate={navigate} />
+        ) : (
+            renderPage()
+        )}
+      </WalletProvider>
+    </ThemeProvider>
+  );
+};
+
+export default App;

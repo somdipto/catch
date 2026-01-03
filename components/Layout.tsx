@@ -1,5 +1,6 @@
 import React from 'react';
 import { useWallet } from '../services/wallet';
+import { useTheme } from '../services/theme';
 import { 
   LayoutDashboard, 
   PlusCircle, 
@@ -8,10 +9,11 @@ import {
   Wallet, 
   Award, 
   FileText, 
-  LogOut,
   Bell,
   Search,
-  ChevronRight
+  ChevronRight,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { Button } from './ui/Button';
 import { cn } from '../lib/utils';
@@ -25,6 +27,7 @@ interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({ children, activePage, onNavigate }) => {
   const { connected, user, connect, disconnect } = useWallet();
+  const { theme, toggleTheme } = useTheme();
 
   const NAV_ITEMS = [
     { id: 'marketplace', label: 'Marketplace', icon: List },
@@ -37,16 +40,16 @@ export const Layout: React.FC<LayoutProps> = ({ children, activePage, onNavigate
   ];
 
   return (
-    <div className="flex h-screen bg-background text-text-main overflow-hidden font-sans">
-      {/* Sidebar - Apple/Stripe Style */}
-      <aside className="w-72 border-r border-border flex flex-col bg-surface/50 backdrop-blur-xl relative z-20">
+    <div className="flex h-screen bg-background text-foreground overflow-hidden font-sans transition-colors duration-300">
+      {/* Sidebar - Glassmorphic Dark/Light */}
+      <aside className="w-72 border-r border-border flex flex-col bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl relative z-20 transition-colors duration-300">
         <div className="p-6 pb-2 flex items-center gap-3 cursor-pointer group" onClick={() => onNavigate('landing')}>
-          <div className="w-10 h-10 bg-gradient-to-br from-primary-DEFAULT to-accent-purple rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/30 transition-shadow">
-            <span className="font-mono font-bold text-white text-xl">C</span>
+          <div className="w-10 h-10 bg-black dark:bg-white rounded-xl flex items-center justify-center shadow-lg shadow-black/10 dark:shadow-white/10 transition-shadow">
+            <span className="font-mono font-bold text-white dark:text-black text-xl">C</span>
           </div>
           <div>
-             <span className="text-lg font-bold tracking-tight text-slate-900 block leading-tight">Catch</span>
-             <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Enterprise</span>
+             <span className="text-lg font-bold tracking-tight text-slate-900 dark:text-white block leading-tight">Catch</span>
+             <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider">Protocol</span>
           </div>
         </div>
 
@@ -56,7 +59,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, activePage, onNavigate
                 <input 
                     type="text" 
                     placeholder="Search..." 
-                    className="w-full bg-white border border-slate-200 rounded-lg py-2 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary-DEFAULT/20 transition-all shadow-sm"
+                    className="w-full bg-slate-50 dark:bg-zinc-800/50 border border-slate-200 dark:border-zinc-700 rounded-lg py-2 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-white transition-all shadow-sm text-slate-900 dark:text-slate-200"
                 />
             </div>
         </div>
@@ -70,16 +73,16 @@ export const Layout: React.FC<LayoutProps> = ({ children, activePage, onNavigate
               className={cn(
                 "w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all relative overflow-hidden group",
                 activePage === item.id
-                  ? "bg-slate-900 text-white shadow-md shadow-slate-900/10"
-                  : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+                  ? "bg-black text-white dark:bg-white dark:text-black shadow-md shadow-black/5 dark:shadow-white/5"
+                  : "text-slate-500 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-zinc-800 dark:hover:text-slate-200"
               )}
             >
-              <item.icon size={18} className={cn(activePage === item.id ? "text-blue-300" : "text-slate-400 group-hover:text-slate-600")} />
+              <item.icon size={18} className={cn(activePage === item.id ? "text-slate-200 dark:text-zinc-600" : "text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300")} />
               {item.label}
               {activePage === item.id && (
                   <motion.div 
                     layoutId="activeNav"
-                    className="absolute inset-0 bg-white/10"
+                    className="absolute inset-0 bg-white/10 dark:bg-black/5"
                     initial={false}
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   />
@@ -88,28 +91,38 @@ export const Layout: React.FC<LayoutProps> = ({ children, activePage, onNavigate
           ))}
         </nav>
 
-        <div className="p-4 border-t border-border bg-white/50">
+        <div className="p-4 border-t border-border bg-white/30 dark:bg-black/30">
+          <div className="flex justify-between items-center mb-4 px-2">
+            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Preferences</span>
+            <button 
+                onClick={toggleTheme}
+                className="p-1.5 rounded-full bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors"
+            >
+                {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+            </button>
+          </div>
+          
           {connected && user ? (
-            <div className="bg-white border border-slate-100 rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow">
+            <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-center gap-3 mb-3">
-                <div className="h-9 w-9 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 border-2 border-white shadow-sm" />
+                <div className="h-9 w-9 rounded-full bg-gradient-to-tr from-slate-200 to-slate-400 dark:from-zinc-700 dark:to-zinc-600 border-2 border-white dark:border-zinc-800 shadow-sm" />
                 <div className="flex-1 overflow-hidden">
-                  <p className="text-sm font-semibold text-slate-900 truncate">{user.walletAddress}</p>
-                  <p className="text-xs text-slate-500 font-mono">Rank: Top 5%</p>
+                  <p className="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate">{user.walletAddress}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-500 font-mono">Rank: Top 5%</p>
                 </div>
               </div>
-              <div className="flex justify-between items-center bg-slate-50 rounded-lg p-2 px-3 mb-2">
-                 <span className="text-xs text-slate-500">Balance</span>
-                 <span className="text-sm font-mono font-bold text-slate-900">{user.balance.toFixed(2)} SOL</span>
+              <div className="flex justify-between items-center bg-slate-50 dark:bg-zinc-950/50 rounded-lg p-2 px-3 mb-2">
+                 <span className="text-xs text-slate-500 dark:text-slate-400">Balance</span>
+                 <span className="text-sm font-mono font-bold text-slate-900 dark:text-white">{user.balance.toFixed(2)} SOL</span>
               </div>
-              <Button variant="ghost" size="sm" className="w-full justify-center text-xs text-red-500 hover:text-red-600 hover:bg-red-50 h-8" onClick={disconnect}>
+              <Button variant="ghost" size="sm" className="w-full justify-center text-xs text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 h-8" onClick={disconnect}>
                 Disconnect
               </Button>
             </div>
           ) : (
-            <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl p-4 text-center shadow-lg shadow-slate-900/20">
-                <p className="text-xs text-blue-200 mb-3 font-medium">Connect to start earning</p>
-                <Button variant="secondary" className="w-full h-9 text-xs" onClick={connect}>
+            <div className="bg-zinc-100 dark:bg-zinc-800 rounded-xl p-4 text-center">
+                <p className="text-xs text-slate-500 dark:text-slate-400 mb-3 font-medium">Connect to start earning</p>
+                <Button variant="primary" className="w-full h-9 text-xs" onClick={connect}>
                 Connect Wallet
                 </Button>
             </div>
@@ -118,14 +131,14 @@ export const Layout: React.FC<LayoutProps> = ({ children, activePage, onNavigate
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col overflow-hidden relative bg-surface">
+      <main className="flex-1 flex flex-col overflow-hidden relative bg-background">
         {/* Top Header - Glassmorphism */}
-        <header className="h-20 flex items-center justify-between px-8 z-10 sticky top-0 bg-surface/80 backdrop-blur-md">
+        <header className="h-20 flex items-center justify-between px-8 z-10 sticky top-0 bg-white/70 dark:bg-black/70 backdrop-blur-md border-b border-border">
           <div className="flex flex-col">
-             <h1 className="text-2xl font-bold text-slate-900 capitalize tracking-tight">
+             <h1 className="text-2xl font-bold text-slate-900 dark:text-white capitalize tracking-tight">
                 {NAV_ITEMS.find(i => i.id === activePage)?.label || activePage}
             </h1>
-            <div className="flex items-center gap-2 text-xs text-slate-500 mt-1">
+            <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-1">
                 <span>Application</span>
                 <ChevronRight size={10} />
                 <span>{activePage}</span>
@@ -133,9 +146,9 @@ export const Layout: React.FC<LayoutProps> = ({ children, activePage, onNavigate
           </div>
           
           <div className="flex items-center gap-4">
-            <button className="h-10 w-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-900 hover:border-slate-300 transition-all relative shadow-sm">
+            <button className="h-10 w-10 rounded-full bg-transparent border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all relative shadow-sm">
               <Bell size={20} />
-              <span className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white" />
+              <span className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-black" />
             </button>
           </div>
         </header>
