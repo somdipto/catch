@@ -3,7 +3,8 @@ import { MOCK_BOUNTIES } from '../constants';
 import { Bounty, SubmissionStatus } from '../types';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
-import { ArrowLeft, UploadCloud, File, AlertCircle, CheckCircle } from 'lucide-react';
+import { ArrowLeft, UploadCloud, File, AlertCircle, CheckCircle, Clock, Users, Coins } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface BountyDetailProps {
   bountyId: string;
@@ -32,7 +33,6 @@ export const BountyDetail: React.FC<BountyDetailProps> = ({ bountyId, onBack }) 
 
   const handleSubmit = () => {
     setIsUploading(true);
-    // Simulate upload
     setTimeout(() => {
         setIsUploading(false);
         setUploadStep('success');
@@ -40,52 +40,62 @@ export const BountyDetail: React.FC<BountyDetailProps> = ({ bountyId, onBack }) 
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
-      <Button variant="ghost" size="sm" onClick={onBack} className="pl-0 gap-2 hover:bg-transparent hover:text-primary">
+    <div className="space-y-8 pb-12">
+      <Button variant="ghost" size="sm" onClick={onBack} className="pl-0 gap-2 text-slate-500 hover:text-slate-900">
         <ArrowLeft size={16} /> Back to Marketplace
       </Button>
 
-      {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between gap-6 border-b border-border pb-8">
-        <div className="space-y-4">
-            <div className="flex items-center gap-3">
-                <Badge status={bounty.dataType} />
-                <Badge status={bounty.status} />
+      {/* Hero Header */}
+      <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-32 bg-blue-50 rounded-full blur-3xl opacity-50 -mr-10 -mt-10" />
+        
+        <div className="relative z-10 flex flex-col md:flex-row justify-between gap-8">
+            <div className="space-y-4 max-w-2xl">
+                <div className="flex items-center gap-3">
+                    <Badge status={bounty.dataType} />
+                    <Badge status={bounty.status} />
+                </div>
+                <h1 className="text-4xl font-bold text-slate-900 tracking-tight">{bounty.title}</h1>
+                <div className="flex flex-wrap gap-2">
+                    {bounty.tags.map(t => (
+                        <span key={t} className="text-xs px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 font-medium">
+                            #{t}
+                        </span>
+                    ))}
+                </div>
             </div>
-            <h1 className="text-3xl font-bold text-white">{bounty.title}</h1>
-            <div className="flex flex-wrap gap-2">
-                {bounty.tags.map(t => (
-                    <span key={t} className="text-xs px-2 py-1 rounded bg-surface border border-border text-slate-400">
-                        {t}
-                    </span>
-                ))}
-            </div>
-        </div>
-        <div className="flex flex-col items-end gap-2">
-            <div className="text-right">
-                <span className="text-sm text-slate-400 block mb-1">Total Pool</span>
-                <span className="text-4xl font-mono font-bold text-primary">{bounty.rewardPool} SOL</span>
-            </div>
-            <div className="text-sm text-slate-500 font-mono">
-                {bounty.rewardPerUnit} SOL per valid unit
+
+            <div className="flex gap-4">
+                 <div className="bg-slate-50 rounded-2xl p-4 min-w-[140px] border border-slate-100">
+                     <div className="flex items-center gap-2 text-slate-500 mb-1 text-xs font-semibold uppercase tracking-wider">
+                         <Coins size={14} /> Reward Pool
+                     </div>
+                     <div className="text-2xl font-mono font-bold text-slate-900">{bounty.rewardPool} SOL</div>
+                 </div>
+                 <div className="bg-slate-50 rounded-2xl p-4 min-w-[140px] border border-slate-100">
+                     <div className="flex items-center gap-2 text-slate-500 mb-1 text-xs font-semibold uppercase tracking-wider">
+                         <Clock size={14} /> Per Unit
+                     </div>
+                     <div className="text-2xl font-mono font-bold text-slate-900">{bounty.rewardPerUnit}</div>
+                 </div>
             </div>
         </div>
       </div>
 
-      {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        {/* Left Column: Details & Tabs */}
-        <div className="lg:col-span-2 space-y-6">
-            <div className="flex border-b border-border">
+        {/* Left Column */}
+        <div className="lg:col-span-2 space-y-8">
+            {/* Tabs */}
+            <div className="flex border-b border-slate-200">
                 {['Overview', 'Submissions', 'Validators'].map(tab => (
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab as any)}
-                        className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
+                        className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors relative ${
                             activeTab.toLowerCase() === tab.toLowerCase()
-                                ? 'border-primary text-primary'
-                                : 'border-transparent text-slate-400 hover:text-white'
+                                ? 'border-blue-600 text-blue-600'
+                                : 'border-transparent text-slate-500 hover:text-slate-800'
                         }`}
                     >
                         {tab}
@@ -93,135 +103,160 @@ export const BountyDetail: React.FC<BountyDetailProps> = ({ bountyId, onBack }) 
                 ))}
             </div>
 
-            {activeTab === 'overview' && (
-                <div className="space-y-8">
-                    <section>
-                        <h3 className="text-lg font-semibold text-white mb-3">Description</h3>
-                        <p className="text-slate-300 leading-relaxed bg-surface/30 p-4 rounded-lg border border-border">
-                            {bounty.description}
-                        </p>
-                    </section>
+            <AnimatePresence mode="wait">
+                {activeTab === 'overview' && (
+                    <motion.div 
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                        className="space-y-8"
+                    >
+                        <section className="prose prose-slate max-w-none">
+                            <h3 className="text-lg font-bold text-slate-900 mb-4">Description</h3>
+                            <p className="text-slate-600 leading-relaxed bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                                {bounty.description}
+                            </p>
+                        </section>
 
-                    <section>
-                        <h3 className="text-lg font-semibold text-white mb-4">Validation Rules</h3>
-                        <div className="space-y-3">
-                            {bounty.validationRules.map((rule, i) => (
-                                <div key={i} className="flex items-start gap-3 p-3 bg-surface/50 rounded-md border border-border/50">
-                                    <div className="mt-0.5 text-primary">
-                                        <AlertCircle size={18} />
+                        <section>
+                            <h3 className="text-lg font-bold text-slate-900 mb-4">Validation Rules</h3>
+                            <div className="grid gap-3">
+                                {bounty.validationRules.map((rule, i) => (
+                                    <div key={i} className="flex items-center gap-4 p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
+                                        <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                                            <AlertCircle size={16} />
+                                        </div>
+                                        <span className="text-slate-700 text-sm font-medium">{rule}</span>
                                     </div>
-                                    <span className="text-slate-200 text-sm">{rule}</span>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
+                        </section>
+                    </motion.div>
+                )}
+                
+                {activeTab === 'submissions' && (
+                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center py-20 bg-slate-50 rounded-2xl border border-slate-200 border-dashed">
+                        <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-4 text-slate-300">
+                            <File size={24} />
                         </div>
-                    </section>
-                </div>
-            )}
-            
-            {activeTab === 'submissions' && (
-                 <div className="text-center py-12 text-slate-500 bg-surface/20 rounded-lg border border-border border-dashed">
-                    No submissions yet. Be the first!
-                 </div>
-            )}
-            
-            {activeTab === 'validators' && (
-                 <div className="space-y-4">
-                    <h3 className="text-white font-medium">Active Validators ({bounty.validatorCount})</h3>
-                    <div className="grid grid-cols-2 gap-4">
+                        <p className="text-slate-900 font-medium">No public submissions yet</p>
+                        <p className="text-slate-500 text-sm">Be the first to contribute to this dataset.</p>
+                     </motion.div>
+                )}
+                
+                {activeTab === 'validators' && (
+                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-2 gap-4">
                         {[1,2,3,4].map(i => (
-                            <div key={i} className="flex items-center gap-3 p-3 bg-surface border border-border rounded-md">
-                                <div className="w-8 h-8 rounded-full bg-slate-700" />
+                            <div key={i} className="flex items-center gap-4 p-4 bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-slate-200 to-slate-300" />
                                 <div>
-                                    <div className="text-sm font-mono text-slate-300">0x...4k9{i}</div>
-                                    <div className="text-xs text-green-500">98% Accuracy</div>
+                                    <div className="text-sm font-bold text-slate-900">Validator 0x...4k9{i}</div>
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <span className="w-2 h-2 rounded-full bg-green-500" />
+                                        <span className="text-xs text-slate-500">98% Consensus Score</span>
+                                    </div>
                                 </div>
                             </div>
                         ))}
-                    </div>
-                 </div>
-            )}
+                     </motion.div>
+                )}
+            </AnimatePresence>
         </div>
 
-        {/* Right Column: Action Card */}
+        {/* Right Column: Upload Card */}
         <div className="space-y-6">
-            <div className="p-6 bg-surface border border-border rounded-xl sticky top-6">
-                <h3 className="text-lg font-bold text-white mb-4">Submit Data</h3>
+            <div className="p-8 bg-white border border-slate-200 rounded-3xl shadow-xl shadow-slate-200/50 sticky top-24">
+                <h3 className="text-xl font-bold text-slate-900 mb-6">Contribute Data</h3>
                 
                 {uploadStep === 'idle' && (
-                    <div className="space-y-4">
-                        <div className="space-y-2">
-                             <div className="flex justify-between text-sm">
-                                <span className="text-slate-400">Progress</span>
-                                <span className="text-white font-mono">{bounty.acceptedQuantity} / {bounty.requiredQuantity}</span>
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+                        <div className="space-y-3">
+                             <div className="flex justify-between text-sm font-medium">
+                                <span className="text-slate-500">Progress Goal</span>
+                                <span className="text-slate-900">{bounty.acceptedQuantity} / {bounty.requiredQuantity}</span>
                              </div>
-                             <div className="h-2 bg-background rounded-full overflow-hidden border border-border">
-                                <div 
-                                    className="h-full bg-primary" 
-                                    style={{ width: `${(bounty.acceptedQuantity / bounty.requiredQuantity) * 100}%` }}
+                             <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                                <motion.div 
+                                    className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full" 
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${(bounty.acceptedQuantity / bounty.requiredQuantity) * 100}%` }}
+                                    transition={{ duration: 1 }}
                                 />
                              </div>
                         </div>
                         
-                        <div className="pt-4">
-                            <Button className="w-full h-12 text-lg shadow-lg shadow-primary/20" onClick={handleUploadClick}>
-                                <UploadCloud className="mr-2" /> Upload Data
+                        <div className="pt-2">
+                            <Button className="w-full h-14 text-base shadow-lg shadow-blue-500/20" onClick={handleUploadClick}>
+                                <UploadCloud className="mr-2" /> Start Upload
                             </Button>
-                            <p className="text-xs text-center text-slate-500 mt-3">
-                                Connect wallet to sign submission.
+                            <p className="text-xs text-center text-slate-400 mt-4 leading-relaxed">
+                                By uploading, you agree to the validation terms. <br/>
+                                Smart contract execution occurs upon approval.
                             </p>
                         </div>
-                    </div>
+                    </motion.div>
                 )}
 
                 {uploadStep === 'selecting' && (
-                    <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:bg-surface/50 transition-colors cursor-pointer relative">
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="border-2 border-dashed border-blue-200 bg-blue-50/50 rounded-2xl p-8 text-center hover:bg-blue-50 transition-colors cursor-pointer relative group"
+                    >
                         <input 
                             type="file" 
                             multiple 
-                            className="absolute inset-0 opacity-0 cursor-pointer"
+                            className="absolute inset-0 opacity-0 cursor-pointer z-10"
                             onChange={handleFileSelect}
                         />
-                        <UploadCloud className="w-10 h-10 text-slate-500 mx-auto mb-3" />
-                        <p className="text-white font-medium">Drag & drop files here</p>
-                        <p className="text-slate-500 text-xs mt-1">or click to browse</p>
-                    </div>
+                        <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                            <UploadCloud className="w-8 h-8 text-blue-500" />
+                        </div>
+                        <p className="text-slate-900 font-semibold mb-1">Click to browse</p>
+                        <p className="text-slate-500 text-sm">or drag files here</p>
+                    </motion.div>
                 )}
 
                 {uploadStep === 'preview' && (
-                    <div className="space-y-4 animate-in zoom-in-95 duration-200">
-                        <div className="flex items-center gap-3 p-3 bg-background rounded border border-border">
-                            <File className="text-primary" />
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+                        <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                            <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                                <File className="text-blue-500" size={20} />
+                            </div>
                             <div className="flex-1">
-                                <div className="text-white text-sm font-medium">{selectedFileCount} files selected</div>
-                                <div className="text-xs text-slate-500">{(selectedFileCount * 1.2).toFixed(1)} MB total</div>
+                                <div className="text-slate-900 text-sm font-semibold">{selectedFileCount} files selected</div>
+                                <div className="text-xs text-slate-500">Ready for validation</div>
                             </div>
                         </div>
                         
-                        <div className="bg-primary/10 border border-primary/20 p-4 rounded text-center">
-                            <div className="text-sm text-primary-200 mb-1">Estimated Reward</div>
-                            <div className="text-2xl font-bold text-primary font-mono">
-                                ≈ {(selectedFileCount * bounty.rewardPerUnit).toFixed(3)} SOL
+                        <div className="bg-gradient-to-br from-slate-900 to-slate-800 p-6 rounded-2xl text-center text-white relative overflow-hidden shadow-lg">
+                            <div className="relative z-10">
+                                <div className="text-sm text-slate-400 mb-1">Estimated Reward</div>
+                                <div className="text-3xl font-mono font-bold">
+                                    ≈ {(selectedFileCount * bounty.rewardPerUnit).toFixed(3)} SOL
+                                </div>
                             </div>
                         </div>
 
                         <div className="flex gap-3">
                             <Button variant="outline" className="flex-1" onClick={() => setUploadStep('idle')}>Cancel</Button>
-                            <Button className="flex-1" onClick={handleSubmit} isLoading={isUploading}>Confirm</Button>
+                            <Button className="flex-1" onClick={handleSubmit} isLoading={isUploading}>Submit</Button>
                         </div>
-                    </div>
+                    </motion.div>
                 )}
 
                 {uploadStep === 'success' && (
-                    <div className="text-center py-6 animate-in zoom-in-95">
-                        <div className="w-16 h-16 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <CheckCircle size={32} />
+                    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-4">
+                        <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <CheckCircle size={40} />
                         </div>
-                        <h4 className="text-white font-bold text-lg mb-2">Upload Successful</h4>
-                        <p className="text-slate-400 text-sm mb-6">
-                            Your submission is now pending validation. You will receive SOL automatically once approved.
+                        <h4 className="text-slate-900 font-bold text-xl mb-3">Submission Received</h4>
+                        <p className="text-slate-500 text-sm mb-8 leading-relaxed">
+                            Your data has been hashed and sent to the validator network. You can track progress in the dashboard.
                         </p>
-                        <Button variant="outline" className="w-full" onClick={() => setUploadStep('idle')}>Done</Button>
-                    </div>
+                        <Button variant="outline" className="w-full" onClick={() => setUploadStep('idle')}>Submit More</Button>
+                    </motion.div>
                 )}
             </div>
         </div>

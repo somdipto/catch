@@ -9,7 +9,7 @@ export const Earnings: React.FC = () => {
 
   if (!user) {
     return (
-        <div className="h-full flex flex-col items-center justify-center text-center p-6">
+        <div className="h-full flex flex-col items-center justify-center text-center">
             <Wallet className="w-16 h-16 text-slate-600 mb-4" />
             <h3 className="text-xl font-bold text-white mb-2">Connect Wallet</h3>
             <p className="text-slate-400 max-w-sm">Connect your Solana wallet to view your earnings history and pending payouts.</p>
@@ -76,33 +76,31 @@ export const Earnings: React.FC = () => {
             </div>
         </div>
 
-        <div className="border border-border rounded-xl overflow-hidden bg-surface/20">
-             <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm whitespace-nowrap md:whitespace-normal">
-                    <thead className="bg-surface/50 text-slate-400">
-                        <tr>
-                            <th className="px-6 py-4 font-medium">Date</th>
-                            <th className="px-6 py-4 font-medium">Bounty</th>
-                            <th className="px-6 py-4 font-medium">Items</th>
-                            <th className="px-6 py-4 font-medium text-right">Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border">
-                        <tr>
-                            <td className="px-6 py-4 text-slate-300">Oct 30, 2023</td>
-                            <td className="px-6 py-4 text-white">Street Sign Classification</td>
-                            <td className="px-6 py-4 text-slate-300">124</td>
-                            <td className="px-6 py-4 text-right font-mono text-green-400">+ 5.80 SOL</td>
-                        </tr>
-                        <tr>
-                            <td className="px-6 py-4 text-slate-300">Oct 25, 2023</td>
-                            <td className="px-6 py-4 text-white">Medical Handwriting</td>
-                            <td className="px-6 py-4 text-slate-300">50</td>
-                            <td className="px-6 py-4 text-right font-mono text-green-400">+ 1.50 SOL</td>
-                        </tr>
-                    </tbody>
-                </table>
-             </div>
+        <div className="border border-border rounded-xl overflow-hidden">
+             <table className="w-full text-left text-sm">
+                <thead className="bg-surface/50 text-slate-400">
+                    <tr>
+                        <th className="px-6 py-4 font-medium">Date</th>
+                        <th className="px-6 py-4 font-medium">Bounty</th>
+                        <th className="px-6 py-4 font-medium">Items</th>
+                        <th className="px-6 py-4 font-medium text-right">Amount</th>
+                    </tr>
+                </thead>
+                <tbody className="divide-y divide-border bg-surface/20">
+                    <tr>
+                        <td className="px-6 py-4 text-slate-300">Oct 30, 2023</td>
+                        <td className="px-6 py-4 text-white">Street Sign Classification</td>
+                        <td className="px-6 py-4 text-slate-300">124</td>
+                        <td className="px-6 py-4 text-right font-mono text-green-400">+ 5.80 SOL</td>
+                    </tr>
+                    <tr>
+                        <td className="px-6 py-4 text-slate-300">Oct 25, 2023</td>
+                        <td className="px-6 py-4 text-white">Medical Handwriting</td>
+                        <td className="px-6 py-4 text-slate-300">50</td>
+                        <td className="px-6 py-4 text-right font-mono text-green-400">+ 1.50 SOL</td>
+                    </tr>
+                </tbody>
+             </table>
         </div>
     </div>
   );

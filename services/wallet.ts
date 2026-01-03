@@ -11,7 +11,7 @@ interface WalletContextType {
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
-export const WalletProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const WalletProvider = ({ children }: { children?: ReactNode }) => {
   const [connected, setConnected] = useState(false);
   const [user, setUser] = useState<UserProfile | null>(null);
 

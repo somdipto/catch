@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useWallet } from '../services/wallet';
 import { 
   LayoutDashboard, 
@@ -10,10 +10,12 @@ import {
   FileText, 
   LogOut,
   Bell,
-  Menu,
-  X
+  Search,
+  ChevronRight
 } from 'lucide-react';
 import { Button } from './ui/Button';
+import { cn } from '../lib/utils';
+import { motion } from 'framer-motion';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -23,7 +25,6 @@ interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({ children, activePage, onNavigate }) => {
   const { connected, user, connect, disconnect } = useWallet();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const NAV_ITEMS = [
     { id: 'marketplace', label: 'Marketplace', icon: List },
@@ -35,106 +36,120 @@ export const Layout: React.FC<LayoutProps> = ({ children, activePage, onNavigate
     { id: 'docs', label: 'Docs', icon: FileText },
   ];
 
-  const handleNavClick = (pageId: string) => {
-    onNavigate(pageId);
-    setIsMobileMenuOpen(false);
-  };
-
   return (
-    <div className="flex h-screen bg-background text-slate-200 overflow-hidden font-sans">
-      {/* Mobile Overlay */}
-      {isMobileMenuOpen && (
-        <div 
-          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-      )}
-
-      {/* Sidebar */}
-      <aside className={`
-        fixed md:static inset-y-0 left-0 z-50 w-64 border-r border-border flex flex-col bg-surface/95 md:bg-surface/50 backdrop-blur-xl md:backdrop-blur-none transition-transform duration-300 ease-in-out
-        ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-      `}>
-        <div className="p-6 border-b border-border flex items-center justify-between">
-            <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleNavClick('landing')}>
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <span className="font-mono font-bold text-white text-lg">C</span>
-              </div>
-              <span className="text-xl font-bold tracking-tight text-white">Catch</span>
-            </div>
-            <button className="md:hidden text-slate-400 hover:text-white" onClick={() => setIsMobileMenuOpen(false)}>
-                <X size={24} />
-            </button>
+    <div className="flex h-screen bg-background text-text-main overflow-hidden font-sans">
+      {/* Sidebar - Apple/Stripe Style */}
+      <aside className="w-72 border-r border-border flex flex-col bg-surface/50 backdrop-blur-xl relative z-20">
+        <div className="p-6 pb-2 flex items-center gap-3 cursor-pointer group" onClick={() => onNavigate('landing')}>
+          <div className="w-10 h-10 bg-gradient-to-br from-primary-DEFAULT to-accent-purple rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/30 transition-shadow">
+            <span className="font-mono font-bold text-white text-xl">C</span>
+          </div>
+          <div>
+             <span className="text-lg font-bold tracking-tight text-slate-900 block leading-tight">Catch</span>
+             <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Enterprise</span>
+          </div>
         </div>
 
-        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+        <div className="px-4 py-6">
+            <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
+                <input 
+                    type="text" 
+                    placeholder="Search..." 
+                    className="w-full bg-white border border-slate-200 rounded-lg py-2 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary-DEFAULT/20 transition-all shadow-sm"
+                />
+            </div>
+        </div>
+
+        <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
           {NAV_ITEMS.map((item) => (
-            <button
+            <motion.button
               key={item.id}
-              onClick={() => handleNavClick(item.id)}
-              className={`w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+              onClick={() => onNavigate(item.id)}
+              whileHover={{ x: 4 }}
+              className={cn(
+                "w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all relative overflow-hidden group",
                 activePage === item.id
-                  ? 'bg-primary/10 text-primary border border-primary/20'
-                  : 'text-slate-400 hover:bg-surface hover:text-white'
-              }`}
+                  ? "bg-slate-900 text-white shadow-md shadow-slate-900/10"
+                  : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+              )}
             >
-              <item.icon size={18} />
+              <item.icon size={18} className={cn(activePage === item.id ? "text-blue-300" : "text-slate-400 group-hover:text-slate-600")} />
               {item.label}
-            </button>
+              {activePage === item.id && (
+                  <motion.div 
+                    layoutId="activeNav"
+                    className="absolute inset-0 bg-white/10"
+                    initial={false}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  />
+              )}
+            </motion.button>
           ))}
         </nav>
 
-        <div className="p-4 border-t border-border">
+        <div className="p-4 border-t border-border bg-white/50">
           {connected && user ? (
-            <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-primary to-purple-500" />
+            <div className="bg-white border border-slate-100 rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="h-9 w-9 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 border-2 border-white shadow-sm" />
                 <div className="flex-1 overflow-hidden">
-                  <p className="text-sm font-medium text-white truncate">{user.walletAddress}</p>
-                  <p className="text-xs text-slate-500 font-mono">{user.balance.toFixed(2)} SOL</p>
+                  <p className="text-sm font-semibold text-slate-900 truncate">{user.walletAddress}</p>
+                  <p className="text-xs text-slate-500 font-mono">Rank: Top 5%</p>
                 </div>
               </div>
-              <Button variant="outline" size="sm" className="w-full justify-start gap-2" onClick={disconnect}>
-                <LogOut size={14} /> Disconnect
+              <div className="flex justify-between items-center bg-slate-50 rounded-lg p-2 px-3 mb-2">
+                 <span className="text-xs text-slate-500">Balance</span>
+                 <span className="text-sm font-mono font-bold text-slate-900">{user.balance.toFixed(2)} SOL</span>
+              </div>
+              <Button variant="ghost" size="sm" className="w-full justify-center text-xs text-red-500 hover:text-red-600 hover:bg-red-50 h-8" onClick={disconnect}>
+                Disconnect
               </Button>
             </div>
           ) : (
-            <Button variant="primary" className="w-full" onClick={connect}>
-              Connect Wallet
-            </Button>
+            <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl p-4 text-center shadow-lg shadow-slate-900/20">
+                <p className="text-xs text-blue-200 mb-3 font-medium">Connect to start earning</p>
+                <Button variant="secondary" className="w-full h-9 text-xs" onClick={connect}>
+                Connect Wallet
+                </Button>
+            </div>
           )}
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col overflow-hidden relative w-full">
-        {/* Top Header */}
-        <header className="h-16 border-b border-border flex items-center justify-between px-4 md:px-6 bg-background/50 backdrop-blur-sm z-10 shrink-0">
-          <div className="flex items-center gap-3">
-            <button 
-                className="md:hidden text-slate-400 hover:text-white p-1" 
-                onClick={() => setIsMobileMenuOpen(true)}
-            >
-                <Menu size={24} />
-            </button>
-            <h1 className="text-lg font-semibold text-white capitalize">
+      <main className="flex-1 flex flex-col overflow-hidden relative bg-surface">
+        {/* Top Header - Glassmorphism */}
+        <header className="h-20 flex items-center justify-between px-8 z-10 sticky top-0 bg-surface/80 backdrop-blur-md">
+          <div className="flex flex-col">
+             <h1 className="text-2xl font-bold text-slate-900 capitalize tracking-tight">
                 {NAV_ITEMS.find(i => i.id === activePage)?.label || activePage}
             </h1>
+            <div className="flex items-center gap-2 text-xs text-slate-500 mt-1">
+                <span>Application</span>
+                <ChevronRight size={10} />
+                <span>{activePage}</span>
+            </div>
           </div>
           
           <div className="flex items-center gap-4">
-            <button className="text-slate-400 hover:text-white transition-colors relative">
+            <button className="h-10 w-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-900 hover:border-slate-300 transition-all relative shadow-sm">
               <Bell size={20} />
-              <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border border-background" />
+              <span className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white" />
             </button>
           </div>
         </header>
 
         {/* Page Content */}
-        <div className="flex-1 overflow-y-auto p-4 md:p-6 scroll-smooth">
-          <div className="max-w-6xl mx-auto">
+        <div className="flex-1 overflow-y-auto px-8 pb-12 pt-4 scroll-smooth">
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="max-w-7xl mx-auto"
+          >
              {children}
-          </div>
+          </motion.div>
         </div>
       </main>
     </div>

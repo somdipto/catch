@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,10 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script>
       tailwind.config = {
-        darkMode: 'class',
         theme: {
           extend: {
             fontFamily: {
@@ -19,12 +18,33 @@
             },
             colors: {
               primary: {
-                DEFAULT: '#4F7CFF',
-                hover: '#3A63E0',
+                DEFAULT: '#2563EB', // Royal Blue
+                hover: '#1D4ED8',
               },
-              background: '#09090b',
-              surface: '#18181b',
-              border: '#27272a',
+              accent: {
+                purple: '#7C3AED',
+                cyan: '#06B6D4',
+              },
+              background: '#FFFFFF',
+              surface: '#F8FAFC', // Slate 50
+              surfaceHighlight: '#F1F5F9', // Slate 100
+              border: '#E2E8F0', // Slate 200
+              text: {
+                main: '#0F172A', // Slate 900
+                muted: '#64748B', // Slate 500
+                light: '#94A3B8', // Slate 400
+              }
+            },
+            animation: {
+              'float': 'float 6s ease-in-out infinite',
+              'float-delayed': 'float 6s ease-in-out 3s infinite',
+              'spin-slow': 'spin 12s linear infinite',
+            },
+            keyframes: {
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-20px)' },
+              }
             }
           }
         }
@@ -32,38 +52,78 @@
     </script>
     <style>
       body {
-        background-color: #09090b;
-        color: #e4e4e7;
+        background-color: #FFFFFF;
+        color: #0F172A;
+        font-family: 'Inter', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow-x: hidden;
       }
-      /* Custom Scrollbar */
+      
+      /* Premium Scrollbar */
       ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
+        width: 6px;
+        height: 6px;
       }
       ::-webkit-scrollbar-track {
-        background: #09090b; 
+        background: transparent; 
       }
       ::-webkit-scrollbar-thumb {
-        background: #27272a; 
-        border-radius: 4px;
+        background: #CBD5E1; 
+        border-radius: 3px;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: #3f3f46; 
+        background: #94A3B8; 
+      }
+
+      .glass {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(226, 232, 240, 0.6);
+      }
+      
+      .gradient-text {
+        background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      
+      .gradient-bg {
+        background: linear-gradient(135deg, #EFF6FF 0%, #F5F3FF 100%);
+      }
+
+      /* Noise texture for premium feel */
+      .noise-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 50;
+        opacity: 0.03;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
       }
     </style>
   <script type="importmap">
 {
   "imports": {
     "recharts": "https://esm.sh/recharts@^3.6.0",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0"
+    "react/": "https://esm.sh/react@^18.2.0/",
+    "react": "https://esm.sh/react@^18.2.0",
+    "react-dom/": "https://esm.sh/react-dom@^18.2.0/",
+    "react-dom": "https://esm.sh/react-dom@^18.2.0",
+    "lucide-react": "https://esm.sh/lucide-react@^0.263.1",
+    "framer-motion": "https://esm.sh/framer-motion@10.16.4",
+    "clsx": "https://esm.sh/clsx",
+    "tailwind-merge": "https://esm.sh/tailwind-merge"
   }
 }
 </script>
 </head>
   <body>
     <div id="root"></div>
+    <div class="noise-bg"></div>
   </body>
 </html>
